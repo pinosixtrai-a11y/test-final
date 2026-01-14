@@ -1,0 +1,2278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Trải Nghiệm Tết Số</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            height: 100dvh; /* Dynamic viewport height cho mobile */
+            top: 0;
+            left: 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .screen {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh; /* Dynamic viewport height */
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* ROTATE SCREEN */
+        #rotate {
+            background: linear-gradient(135deg, #8B0000, #DC143C, #FFD700);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rotate-icon {
+            font-size: 8rem;
+            animation: rotatePhone 2s infinite;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes rotatePhone {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(90deg); }
+        }
+
+        .rotate-text {
+            font-size: 2rem;
+            color: white;
+            text-align: center;
+            padding: 0 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-weight: bold;
+        }
+
+        /* INTRO SCREEN */
+        #intro {
+            background-image: url('pinonen.jpg');
+            background-size: cover;
+            background-position: center;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 1s ease-in;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #intro::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(139,0,0,0.7) 0%, rgba(220,20,60,0.6) 30%, rgba(255,99,71,0.5) 60%, rgba(255,165,0,0.4) 100%);
+            z-index: 1;
+        }
+
+        #intro::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+            animation: glow-bg 3s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        #intro > * {
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes glow-bg {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .intro-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 20px rgba(255,215,0,0.5);
+            margin-bottom: 3rem;
+            text-align: center;
+            padding: 0 2rem;
+            animation: titleGlow 2s infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 20px rgba(255,215,0,0.5); }
+            50% { text-shadow: 3px 3px 8px rgba(0,0,0,0.7), 0 0 40px rgba(255,165,0,0.8); }
+        }
+
+        .banhchung-container {
+            position: relative;
+            cursor: pointer;
+            animation: banhchungAppear 1.5s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        @keyframes banhchungAppear {
+            0% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .banhchung-img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.4));
+            transition: all 0.3s ease;
+        }
+
+        .click-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            animation: clickTextGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes clickTextGlow {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .banhchung-container:hover .banhchung-img {
+            transform: scale(1.1) rotate(5deg);
+            filter: drop-shadow(0 15px 40px rgba(255,215,0,0.6));
+        }
+
+        .banhchung-container:hover .click-text {
+            color: #FFA500;
+            transform: scale(1.15);
+        }
+
+        .intro-hint {
+            font-size: 1rem;
+            color: #D4AF37;
+            font-style: italic;
+            text-align: center;
+            margin-top: 2rem;
+            padding: 0 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: hintFade 2s ease-in-out infinite;
+            max-width: 600px;
+        }
+
+        @keyframes hintFade {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* MAIN SCREEN */
+        #main {
+            background-image: url('pinocaydao.gif');
+            background-size: cover;
+            background-position: center;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .main-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .top-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .control-box {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .control-box.locked {
+            background: #CCCCCC;
+            opacity: 0.7;
+            border: 2px dashed #999;
+        }
+
+        .control-box.unlocked {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            animation: boxGlow 1.5s infinite;
+        }
+
+        @keyframes boxGlow {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 16px rgba(255,215,0,0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 24px rgba(255,165,0,0.8); }
+        }
+
+        .control-icon {
+            font-size: 2.5rem;
+        }
+
+        .control-progress {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #8B0000;
+            margin-top: 0.3rem;
+        }
+
+        .lock-icon {
+            position: absolute;
+            font-size: 1.5rem;
+            top: -10px;
+            right: -10px;
+        }
+
+        .control-box:hover {
+            transform: scale(1.05);
+        }
+
+        .lock-tooltip {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 200;
+        }
+
+        .control-box:hover .lock-tooltip {
+            opacity: 1;
+        }
+
+        /* CENTER TET 2026 BUTTON */
+        .center-tet-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, #DC143C, #FF6347, #FFA500);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 50;
+            box-shadow: 0 0 30px rgba(255,215,0,0.5), 0 0 60px rgba(220,20,60,0.4);
+            transition: all 0.3s ease;
+        }
+
+        .center-tet-button.locked {
+            background: #CCCCCC;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .center-tet-button.unlocked {
+            animation: centerGlow 2s infinite;
+        }
+
+        @keyframes centerGlow {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1); 
+                box-shadow: 0 0 30px rgba(255,215,0,0.5), 0 0 60px rgba(220,20,60,0.4);
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.05); 
+                box-shadow: 0 0 50px rgba(255,215,0,0.8), 0 0 100px rgba(220,20,60,0.6);
+            }
+        }
+
+        .center-tet-button:hover:not(.locked) {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .center-tet-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5), 0 0 20px rgba(255,215,0,1);
+            margin-bottom: 0.5rem;
+        }
+
+        .center-tet-year {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .center-lock-icon {
+            position: absolute;
+            font-size: 2rem;
+            color: #666;
+            top: 30%;
+            transform: translateY(-50%);
+        }
+
+        .center-lock-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #666;
+            text-align: center;
+            line-height: 1.5;
+            position: absolute;
+            bottom: 30%;
+        }
+
+        /* ICON ITEMS WITH CIRCLES - THU NHỎ */
+        .icon-item {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .icon-circle {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .icon-circle img {
+            width: 85%;
+            height: 85%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .icon-item:hover .icon-circle {
+            transform: scale(1.1);
+            box-shadow: 0 8px 24px rgba(255,215,0,0.8);
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        @keyframes sway1 {
+            0%, 100% { transform: translate(0, 0) rotate(-2deg); }
+            50% { transform: translate(-5px, -8px) rotate(2deg); }
+        }
+
+        @keyframes sway2 {
+            0%, 100% { transform: translate(0, 0) rotate(3deg); }
+            50% { transform: translate(8px, -5px) rotate(-3deg); }
+        }
+
+        @keyframes sway3 {
+            0%, 100% { transform: translate(0, 0) rotate(-3deg); }
+            50% { transform: translate(-6px, 6px) rotate(2deg); }
+        }
+
+        @keyframes sway4 {
+            0%, 100% { transform: translate(0, 0) rotate(2deg); }
+            50% { transform: translate(7px, 8px) rotate(-2deg); }
+        }
+
+        @keyframes sway5 {
+            0%, 100% { transform: translate(0, 0) rotate(-1deg); }
+            50% { transform: translate(-8px, -6px) rotate(3deg); }
+        }
+
+        @keyframes sway6 {
+            0%, 100% { transform: translate(0, 0) rotate(3deg); }
+            50% { transform: translate(5px, 7px) rotate(-3deg); }
+        }
+
+        .icon-1 {
+            top: 15%;
+            left: 25%;
+            animation: sway1 4s ease-in-out infinite;
+        }
+
+        .icon-2 {
+            top: 18%;
+            right: 28%;
+            animation: sway2 4.5s ease-in-out infinite;
+        }
+
+        .icon-3 {
+            top: 40%;
+            left: 18%;
+            animation: sway3 3.8s ease-in-out infinite;
+        }
+
+        .icon-4 {
+            top: 42%;
+            right: 20%;
+            animation: sway4 4.2s ease-in-out infinite;
+        }
+
+        .icon-5 {
+            bottom: 25%;
+            left: 30%;
+            animation: sway5 3.5s ease-in-out infinite;
+        }
+
+        .icon-6 {
+            bottom: 28%;
+            right: 32%;
+            animation: sway6 4.8s ease-in-out infinite;
+        }
+
+        .flower {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: fall linear infinite;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0.5;
+            }
+        }
+
+        /* SLIDE SCREEN */
+        #slide {
+            background-image: url('pinonen.jpg');
+            background-size: cover;
+            background-position: center;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide-container {
+            width: 90%;
+            max-width: 900px;
+            height: 85%;
+            background-image: url('pinonen.jpg');
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .slide-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 0;
+        }
+
+        .slide-container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide-image {
+            max-width: 90%;
+            max-height: 55%;
+            object-fit: contain;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+        }
+
+        .slide-message {
+            font-size: 1.3rem;
+            color: #8B0000;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.6;
+            padding: 0 2rem;
+            max-width: 700px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: #DC143C;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .close-button:hover {
+            background: #B22222;
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        .camera-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: #4169E1;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .camera-button:hover {
+            background: #1E90FF;
+            transform: scale(1.1);
+        }
+
+        /* LANTERN ALBUM SCREEN */
+        #lanternAlbum {
+            background: radial-gradient(circle at center, #1a0a2e 0%, #0f0520 50%, #000000 100%);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .lantern-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            perspective: 2000px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .lantern-container.locked {
+            pointer-events: none;
+        }
+
+        .lantern-container.locked .photo-lantern {
+            pointer-events: auto !important;
+        }
+
+        .central-lantern {
+            position: absolute;
+            width: 150px;
+            height: 210px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+            z-index: 50;
+        }
+
+        .central-lantern:hover {
+            transform: scale(1.1);
+        }
+
+        .lantern-body {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            animation: lanternFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes lanternFloat {
+            0%, 100% { transform: translateY(0) rotateZ(-2deg); }
+            50% { transform: translateY(-15px) rotateZ(2deg); }
+        }
+
+        .lantern-top, .lantern-bottom {
+            width: 100%;
+            height: 25px;
+            background: linear-gradient(to bottom, #8B0000, #DC143C);
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.8);
+        }
+
+        .lantern-top {
+            top: 0;
+        }
+
+        .lantern-bottom {
+            bottom: 0;
+        }
+
+        .lantern-main {
+            position: absolute;
+            top: 25px;
+            width: 100%;
+            height: calc(100% - 50px);
+            background: linear-gradient(135deg, #DC143C 0%, #FF4444 50%, #DC143C 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                inset 0 0 30px rgba(255, 215, 0, 0.3),
+                0 0 40px rgba(220, 20, 60, 0.6),
+                0 0 60px rgba(255, 215, 0, 0.4);
+            animation: lanternGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes lanternGlow {
+            0%, 100% { box-shadow: inset 0 0 30px rgba(255, 215, 0, 0.3), 0 0 40px rgba(220, 20, 60, 0.6), 0 0 60px rgba(255, 215, 0, 0.4); }
+            50% { box-shadow: inset 0 0 50px rgba(255, 215, 0, 0.5), 0 0 60px rgba(220, 20, 60, 0.8), 0 0 80px rgba(255, 215, 0, 0.6); }
+        }
+
+        .lantern-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 1);
+            letter-spacing: 0.5rem;
+        }
+
+        .lantern-tassel {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 60px;
+            background: linear-gradient(to bottom, #FFD700, #FF6347);
+            animation: tasselSway 2s ease-in-out infinite;
+            transform-origin: top center;
+        }
+
+        @keyframes tasselSway {
+            0%, 100% { transform: translateX(-50%) rotate(-5deg); }
+            50% { transform: translateX(-50%) rotate(5deg); }
+        }
+
+        .lantern-tassel::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, #FFD700, #DC143C);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+        }
+
+        .click-lantern-hint {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.3rem;
+            color: #FFD700;
+            text-align: center;
+            z-index: 100;
+            animation: hintPulse 2s ease-in-out infinite;
+            pointer-events: none;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+
+        @keyframes hintPulse {
+            0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .click-lantern-hint.hidden {
+            display: none;
+        }
+
+        .photo-lantern {
+            position: absolute;
+            width: 80px;
+            height: 112px;
+            opacity: 0;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        .photo-lantern.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .photo-lantern:hover {
+            transform: scale(1.15) translateZ(50px) !important;
+            z-index: 100;
+        }
+
+        .photo-lantern-body {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            animation: smallLanternFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes smallLanternFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+
+        .photo-lantern-top, .photo-lantern-bottom {
+            width: 100%;
+            height: 15px;
+            background: linear-gradient(to bottom, #8B0000, #DC143C);
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 10px rgba(220, 20, 60, 0.6);
+        }
+
+        .photo-lantern-top {
+            top: 0;
+        }
+
+        .photo-lantern-bottom {
+            bottom: 0;
+        }
+
+        .photo-lantern-main {
+            position: absolute;
+            top: 15px;
+            width: 100%;
+            height: calc(100% - 30px);
+            background: rgba(220, 20, 60, 0.3);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            overflow: hidden;
+            box-shadow: 
+                inset 0 0 20px rgba(255, 215, 0, 0.2),
+                0 0 20px rgba(220, 20, 60, 0.4),
+                0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .photo-lantern-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .photo-lantern-tassel {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(to bottom, #FFD700, #FF6347);
+            animation: smallTasselSway 2s ease-in-out infinite;
+            transform-origin: top center;
+        }
+
+        @keyframes smallTasselSway {
+            0%, 100% { transform: translateX(-50%) rotate(-8deg); }
+            50% { transform: translateX(-50%) rotate(8deg); }
+        }
+
+        .photo-lantern-tassel::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, #FFD700, #DC143C);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
+        .light-beam {
+            position: absolute;
+            width: 2px;
+            height: 0;
+            background: linear-gradient(to bottom, rgba(255, 215, 0, 0.8), transparent);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            animation: beamGrow 1.5s ease-out forwards;
+            transform-origin: top center;
+        }
+
+        @keyframes beamGrow {
+            0% { height: 0; opacity: 1; }
+            100% { height: 150px; opacity: 0; }
+        }
+
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #FFD700, transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleFloat 3s ease-out forwards;
+        }
+
+        @keyframes particleFloat {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
+        }
+
+        /* PHOTO ZOOM POPUP */
+        .photo-zoom-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s;
+        }
+
+        .photo-zoom-popup.show {
+            display: flex;
+        }
+
+        .photo-zoom-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            animation: zoomIn 0.5s;
+        }
+
+        @keyframes zoomIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .photo-zoom-img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(255,215,0,0.5);
+        }
+
+        .photo-zoom-message {
+            font-size: 1.3rem;
+            color: #FFD700;
+            text-align: center;
+            margin-top: 2rem;
+            text-shadow: 0 0 20px rgba(255,215,0,0.8);
+        }
+
+        .photo-zoom-close {
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 50px;
+            height: 50px;
+            background: #DC143C;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .photo-zoom-close:hover {
+            background: #B22222;
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        .lantern-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: #DC143C;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .lantern-close:hover {
+            background: #B22222;
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        .lantern-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FFD700;
+            font-size: 1.2rem;
+            text-align: center;
+            z-index: 100;
+            animation: hintFade 2s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
+        /* COUNTDOWN SCREEN */
+        #countdown {
+            background: black;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .countdown-text {
+            font-size: 2rem;
+            color: #FFD700;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-shadow: 0 0 30px rgba(255,215,0,0.8);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .countdown-number {
+            font-size: 8rem;
+            font-weight: bold;
+            color: #DC143C;
+            text-shadow: 0 0 50px rgba(220,20,60,1);
+            animation: countdownPop 1s ease-out;
+        }
+
+        @keyframes countdownPop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* TROLL IMAGE SCREEN */
+        #trollScreen {
+            background: black;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .troll-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* FIREWORKS SCREEN */
+        #fireworksScreen {
+            background: linear-gradient(to bottom, #000428, #004e92);
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fireworks-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* FINAL SCREEN - KHÔNG NHẤP NHÁY */
+        #finalScreen {
+            background-image: url('pino.jpg');
+            background-size: cover;
+            background-position: center;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #finalScreen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        #finalScreen > * {
+            position: relative;
+            z-index: 10;
+        }
+
+        .final-title {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #FFD700;
+            text-align: center;
+            text-shadow: 0 0 40px rgba(255,215,0,1), 3px 3px 6px rgba(0,0,0,0.8);
+            margin-bottom: 2rem;
+        }
+
+        .final-message {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #FFD700;
+            text-align: center;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 30px rgba(255,215,0,0.8);
+            max-width: 900px;
+            line-height: 1.8;
+        }
+
+        /* LIXI POPUP */
+        .lixi-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+
+        .lixi-popup.show {
+            display: flex;
+        }
+
+        .lixi-content {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            animation: popIn 0.5s;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5) rotate(-10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .lixi-content h2 {
+            font-size: 2rem;
+            color: #DC143C;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .lixi-content .message {
+            font-size: 1.3rem;
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .lixi-close-btn {
+            background: white;
+            color: #DC143C;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.3rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .lixi-close-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Mobile Responsive - THU NHỎ TẤT CẢ */
+        @media (max-width: 768px) {
+            .intro-title { font-size: 1.4rem; padding: 0 1rem; }
+            .rotate-text { font-size: 1.2rem; }
+            .banhchung-img { width: 150px; height: 150px; }
+            .click-text { font-size: 2rem; }
+            .intro-hint { font-size: 0.85rem; }
+            .icon-item { width: 70px; height: 70px; }
+            .control-box { width: 70px; height: 70px; }
+            .control-icon { font-size: 2rem; }
+            .control-progress { font-size: 0.65rem; }
+            .lock-icon { font-size: 1.5rem; top: -8px; right: -8px; }
+            .center-tet-button { width: 140px; height: 140px; }
+            .center-tet-text { font-size: 1.5rem; }
+            .center-tet-year { font-size: 1.2rem; }
+            .center-lock-icon { font-size: 2rem; }
+            .center-lock-text { font-size: 0.85rem; }
+            .central-lantern { width: 120px; height: 168px; }
+            .lantern-text { font-size: 1.8rem; }
+            .photo-lantern { width: 70px; height: 98px; }
+            .click-lantern-hint { font-size: 1.3rem; }
+            .lantern-hint { font-size: 1rem; }
+            .slide-message { font-size: 1.3rem; padding: 0 1rem; }
+            .countdown-text { font-size: 1.8rem; padding: 0 1rem; }
+            .countdown-number { font-size: 6rem; }
+            .final-title { font-size: 2rem; }
+            .final-message { font-size: 1rem; padding: 0 1rem; }
+            .lixi-content { padding: 2rem; }
+            .lixi-content h2 { font-size: 2rem; }
+            .lixi-content .message { font-size: 1.3rem; }
+            .photo-zoom-message { font-size: 1.3rem; }
+        }
+
+        @media (orientation: portrait) {
+            #intro, #main, #slide, #lanternAlbum, #countdown, #trollScreen, #fireworksScreen, #finalScreen {
+                display: none !important;
+            }
+            #rotate { display: flex !important; }
+        }
+
+        @media (orientation: landscape) {
+            #rotate { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ROTATE SCREEN -->
+    <div id="rotate" class="screen">
+        <div class="rotate-icon">📱🔄</div>
+        <div class="rotate-text">Vui lòng xoay ngang điện thoại<br>để trải nghiệm tốt nhất!</div>
+    </div>
+
+    <!-- INTRO SCREEN -->
+    <div id="intro" class="screen active">
+        <div class="intro-title">BẮT ĐẦU HÀNH TRÌNH NGÀY TẾT</div>
+        
+        <div class="banhchung-container" onclick="startExperience()">
+            <div class="click-text">ẤN</div>
+            <img src="banhchung.jpg" alt="Bánh Chưng" class="banhchung-img">
+            <div class="click-text">VÀO</div>
+        </div>
+
+        <div class="intro-hint">Hãy xem hết 6 album để mở khoá những điều thú vị</div>
+        
+        <!-- LOADING INDICATOR -->
+        <div id="loadingIndicator" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: #FFD700; font-size: 0.9rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+            Đang tải ảnh...
+        </div>
+    </div>
+
+    <!-- MAIN SCREEN -->
+    <div id="main" class="screen">
+        <div class="main-content">
+            <div class="top-controls">
+                <div class="control-box locked" id="lixiBox" onclick="handleLixiClick()">
+                    <div class="lock-icon">🔒</div>
+                    <div class="control-icon">🧧</div>
+                    <div class="control-progress" id="lixiProgress">0/6</div>
+                    <div class="lock-tooltip">🔒 Cần xem hết 6 album để mở khoá!</div>
+                </div>
+                <div class="control-box locked" id="albumBox" onclick="handleAlbumClick()">
+                    <div class="lock-icon">🔒</div>
+                    <div class="control-icon">🏮</div>
+                    <div class="control-progress" id="albumProgress">0/6</div>
+                    <div class="lock-tooltip">🔒 Cần xem hết 6 album để mở khoá!</div>
+                </div>
+            </div>
+
+            <!-- CENTER TET 2026 BUTTON -->
+            <div class="center-tet-button locked" id="centerTetButton" onclick="handleCenterClick()">
+                <div class="center-lock-icon" id="centerLockIcon">🔒</div>
+                <div class="center-lock-text" id="centerLockText">Cần sử dụng<br>Lì Xì và Lồng Đèn</div>
+                <div class="center-tet-text" id="centerTetText" style="display: none;">TẾT</div>
+                <div class="center-tet-year" id="centerTetYear" style="display: none;">2026</div>
+            </div>
+            
+            <div class="icon-item icon-1" onclick="openSlide(0)">
+                <div class="icon-circle">
+                    <img src="pinoicon1.jpg" alt="Icon 1">
+                </div>
+            </div>
+            
+            <div class="icon-item icon-2" onclick="openSlide(1)">
+                <div class="icon-circle">
+                    <img src="pinoicon2.jpg" alt="Icon 2">
+                </div>
+            </div>
+            
+            <div class="icon-item icon-3" onclick="openSlide(2)">
+                <div class="icon-circle">
+                    <img src="pinoicon3.jpg" alt="Icon 3">
+                </div>
+            </div>
+            
+            <div class="icon-item icon-4" onclick="openSlide(3)">
+                <div class="icon-circle">
+                    <img src="pinoicon4.jpg" alt="Icon 4">
+                </div>
+            </div>
+            
+            <div class="icon-item icon-5" onclick="openSlide(4)">
+                <div class="icon-circle">
+                    <img src="pinoicon5.jpg" alt="Icon 5">
+                </div>
+            </div>
+            
+            <div class="icon-item icon-6" onclick="openSlide(5)">
+                <div class="icon-circle">
+                    <img src="pinoicon6.jpg" alt="Icon 6">
+                </div>
+            </div>
+
+            <div id="flowersContainer"></div>
+        </div>
+    </div>
+
+    <!-- SLIDE SCREEN -->
+    <div id="slide" class="screen">
+        <div class="slide-container">
+            <button class="close-button" onclick="backToMain()">✕</button>
+            <img id="slideImage" class="slide-image" src="" alt="Slide">
+            <div id="slideMessage" class="slide-message"></div>
+            <button class="camera-button" onclick="captureSlide()">📸</button>
+        </div>
+    </div>
+
+    <!-- LANTERN ALBUM SCREEN -->
+    <div id="lanternAlbum" class="screen">
+        <div class="click-lantern-hint" id="clickLanternHint">👆 Ấn vào đèn lồng để thắp sáng 👆</div>
+        
+        <div class="lantern-container" id="lanternContainer">
+            <div class="central-lantern" id="centralLantern" onclick="lightUpLanterns()">
+                <div class="lantern-body">
+                    <div class="lantern-top"></div>
+                    <div class="lantern-main">
+                        <div class="lantern-text">2026</div>
+                    </div>
+                    <div class="lantern-bottom"></div>
+                    <div class="lantern-tassel"></div>
+                </div>
+            </div>
+        </div>
+
+        <button class="lantern-close" onclick="exitLanternAlbum()">✕</button>
+        <div class="lantern-hint" id="lanternHint">🔍 Click đèn để xem ảnh</div>
+    </div>
+
+    <!-- PHOTO ZOOM POPUP -->
+    <div class="photo-zoom-popup" id="photoZoomPopup">
+        <div class="photo-zoom-content">
+            <button class="photo-zoom-close" onclick="closePhotoZoom()">✕</button>
+            <img id="photoZoomImg" class="photo-zoom-img" src="" alt="Photo">
+            <div id="photoZoomMessage" class="photo-zoom-message"></div>
+        </div>
+    </div>
+
+    <!-- COUNTDOWN SCREEN -->
+    <div id="countdown" class="screen">
+        <div class="countdown-text" id="countdownText">NGẮM PHÁO HOA CÙNG PINO</div>
+        <div class="countdown-number" id="countdownNumber"></div>
+    </div>
+
+    <!-- TROLL SCREEN -->
+    <div id="trollScreen" class="screen">
+        <img src="pinotroll.jpg" class="troll-image" alt="Troll">
+    </div>
+
+    <!-- FIREWORKS SCREEN -->
+    <div id="fireworksScreen" class="screen">
+        <canvas id="fireworksCanvas" class="fireworks-canvas"></canvas>
+    </div>
+
+    <!-- FINAL SCREEN -->
+    <div id="finalScreen" class="screen">
+        <div class="final-title">HAPPY NEW YEAR 2026</div>
+        <div class="final-message">
+            🎊 HÃY NHỚ GỬI PINO 🎊<br>
+            📸 MÀN HÌNH CHỤP Ở LÌ XÌ NHA 📸<br>
+            💝 XIN CẢM ƠN! 💝
+        </div>
+    </div>
+
+    <!-- LIXI POPUP -->
+    <div class="lixi-popup" id="lixiPopup">
+        <div class="lixi-content">
+            <h2>🎊 CHÚC MỪNG! 🎊</h2>
+            <div class="message" id="lixiMessage"></div>
+            <button class="lixi-close-btn" onclick="closeLixiPopup()">Đóng</button>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="nhactet.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="fireworksMusic">
+        <source src="pino2.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="finalMusic" loop>
+        <source src="pino3.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const albums = [
+            { image: 'pino1.jpg', message: 'Xuân Về Muôn Sự Tốt Lành<br>Phúc Lộc Tràn Đầy - Vạn Sự Như Ý!' },
+            { image: 'pino2.jpg', message: 'An Khang Thịnh Vượng - Năm Mới Phát Tài<br>Tiền Vào Như Nước - Của Chất Như Núi!' },
+            { image: 'pino3.jpg', message: 'Sức Khỏe Dồi Dào - Tuổi Thọ Miên Trường<br>Luôn Bình An - Không Bệnh Tật!' },
+            { image: 'pino4.jpg', message: 'Gia Đạo Hưng Long - Nhà Nào Cũng Vui<br>Sum Họp Đầm Ấm - Gia Đình Hạnh Phúc!' },
+            { image: 'pino5.jpg', message: 'Công Danh Thăng Tiến - Sự Nghiệp Hanh Thông<br>Làm Ăn Phát Đạt - Vạn Sự Như Ý!' },
+            { image: 'pino6.jpg', message: 'Cát Tường Như Ý - Tài Lộc Dồi Dào<br>Năm Mới An Khang - Vui Vẻ Hạnh Phúc!' }
+        ];
+
+        const lixiAmounts = ['5k', '10k', '15k', '20k'];
+        
+        let visitedAlbums = [];
+        let hasReceivedLixi = false;
+        let hasViewedAlbum = false;
+        let currentScreen = 'intro';
+        let bgMusic = document.getElementById('bgMusic');
+        let fireworksMusic = document.getElementById('fireworksMusic');
+        let finalMusic = document.getElementById('finalMusic');
+        let lanternsLit = false;
+        let audioUnlocked = false;
+        let imagesLoaded = false;
+        
+        // PRELOAD TẤT CẢ ẢNH NGAY KHI TRANG LOAD
+        const imageCache = {};
+        function preloadImages() {
+            const allImages = [
+                'pinonen.jpg',
+                'pinocaydao.gif',
+                'banhchung.jpg',
+                'pinoicon1.jpg',
+                'pinoicon2.jpg',
+                'pinoicon3.jpg',
+                'pinoicon4.jpg',
+                'pinoicon5.jpg',
+                'pinoicon6.jpg',
+                'pino1.jpg',
+                'pino2.jpg',
+                'pino3.jpg',
+                'pino4.jpg',
+                'pino5.jpg',
+                'pino6.jpg',
+                'pinotroll.jpg',
+                'pino.jpg'
+            ];
+            
+            let loadedCount = 0;
+            const totalImages = allImages.length;
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            allImages.forEach(src => {
+                const img = new Image();
+                img.onload = () => {
+                    imageCache[src] = img;
+                    loadedCount++;
+                    
+                    // CẬP NHẬT LOADING
+                    if (loadingIndicator) {
+                        loadingIndicator.textContent = `Đang tải ảnh... ${loadedCount}/${totalImages}`;
+                    }
+                    
+                    console.log(`Loaded ${loadedCount}/${totalImages}: ${src}`);
+                    
+                    if (loadedCount === totalImages) {
+                        imagesLoaded = true;
+                        console.log('All images preloaded!');
+                        
+                        // ẨN LOADING SAU 500MS
+                        setTimeout(() => {
+                            if (loadingIndicator) {
+                                loadingIndicator.style.display = 'none';
+                            }
+                        }, 500);
+                    }
+                };
+                img.onerror = () => {
+                    console.error(`Failed to load: ${src}`);
+                    loadedCount++;
+                    if (loadingIndicator) {
+                        loadingIndicator.textContent = `Đang tải ảnh... ${loadedCount}/${totalImages}`;
+                    }
+                };
+                img.src = src;
+            });
+        }
+        
+        // GỌI PRELOAD NGAY KHI TRANG LOAD
+        window.addEventListener('load', preloadImages);
+        // BACKUP: Nếu load event không fire, gọi sau 1 giây
+        setTimeout(preloadImages, 1000);
+        
+        // HÀM DỪNG TẤT CẢ NHẠC
+        function stopAllMusic() {
+            bgMusic.pause();
+            bgMusic.currentTime = 0;
+            fireworksMusic.pause();
+            fireworksMusic.currentTime = 0;
+            finalMusic.pause();
+            finalMusic.currentTime = 0;
+        }
+        
+        // HÀM MỞ KHÓA AUDIO CHO MOBILE - SỬA LẠI
+        function unlockAudio() {
+            if (audioUnlocked) return;
+            
+            // CHỈ LOAD, KHÔNG PLAY
+            const sounds = [bgMusic, fireworksMusic, finalMusic];
+            sounds.forEach(sound => {
+                sound.load(); // Load thay vì play
+            });
+            
+            audioUnlocked = true;
+            console.log('Audio unlocked for mobile');
+        }
+        
+        let lanternState = {
+            rotationX: 0,
+            rotationY: 0,
+            isDragging: false,
+            lastX: 0,
+            lastY: 0,
+            isLocked: false
+        };
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            currentScreen = screenId;
+        }
+
+        function startExperience() {
+            showScreen('main');
+            
+            // MỞ KHÓA AUDIO
+            unlockAudio();
+            
+            // DỪNG TẤT CẢ NHẠC TRƯỚC
+            stopAllMusic();
+            
+            // CHẠY NHẠC NỀN
+            setTimeout(() => {
+                bgMusic.volume = 0.8;
+                bgMusic.loop = true;
+                const playPromise = bgMusic.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('Background music playing');
+                    }).catch(error => {
+                        console.log('BG music blocked:', error);
+                    });
+                }
+            }, 200);
+            
+            createFallingFlowers();
+        }
+
+        function openSlide(index) {
+            unlockAudio(); // ĐẢM BẢO AUDIO ĐÃ MỞ KHÓA
+            
+            const album = albums[index];
+            document.getElementById('slideImage').src = album.image;
+            document.getElementById('slideMessage').innerHTML = album.message;
+            
+            if (!visitedAlbums.includes(index)) {
+                visitedAlbums.push(index);
+                updateProgress();
+            }
+            
+            showScreen('slide');
+        }
+
+        function updateProgress() {
+            const progress = visitedAlbums.length;
+            document.getElementById('lixiProgress').textContent = progress + '/6';
+            document.getElementById('albumProgress').textContent = progress + '/6';
+            
+            if (progress === 6) {
+                const lixiBox = document.getElementById('lixiBox');
+                const albumBox = document.getElementById('albumBox');
+                
+                lixiBox.classList.remove('locked');
+                lixiBox.classList.add('unlocked');
+                lixiBox.querySelector('.lock-icon').textContent = '✨';
+                
+                albumBox.classList.remove('locked');
+                albumBox.classList.add('unlocked');
+                albumBox.querySelector('.lock-icon').textContent = '✨';
+            }
+
+            checkCenterButtonUnlock();
+        }
+
+        function checkCenterButtonUnlock() {
+            if (hasReceivedLixi && hasViewedAlbum) {
+                const centerBtn = document.getElementById('centerTetButton');
+                centerBtn.classList.remove('locked');
+                centerBtn.classList.add('unlocked');
+                document.getElementById('centerLockIcon').style.display = 'none';
+                document.getElementById('centerLockText').style.display = 'none';
+                document.getElementById('centerTetText').style.display = 'block';
+                document.getElementById('centerTetYear').style.display = 'block';
+            }
+        }
+
+        function handleLixiClick() {
+            if (visitedAlbums.length === 6) {
+                if (!hasReceivedLixi) {
+                    openLixiPopup();
+                    hasReceivedLixi = true;
+                    checkCenterButtonUnlock();
+                } else {
+                    showAlreadyReceivedMessage();
+                }
+            }
+        }
+
+        function handleAlbumClick() {
+            if (visitedAlbums.length === 6) {
+                openLanternAlbum();
+                hasViewedAlbum = true;
+                checkCenterButtonUnlock();
+            }
+        }
+
+        function handleCenterClick() {
+            unlockAudio(); // MỞ KHÓA KHI CLICK NÚT GIỮA
+            if (hasReceivedLixi && hasViewedAlbum) {
+                showTrollScreen();
+            }
+        }
+
+        function openLixiPopup() {
+            const randomAmount = lixiAmounts[Math.floor(Math.random() * lixiAmounts.length)];
+            document.getElementById('lixiMessage').innerHTML = `
+                <div style="font-size: 4rem; margin-bottom: 1rem;">${randomAmount}</div>
+                <div style="font-size: 1.3rem; color: #8B0000;">Liên hệ Pino để nhận và yêu cầu chụp màn hình</div>
+            `;
+            document.getElementById('lixiPopup').classList.add('show');
+        }
+
+        function showAlreadyReceivedMessage() {
+            document.getElementById('lixiMessage').innerHTML = `
+                <div style="font-size: 1.8rem; color: #8B0000;">Bạn đã nhận được lì xì rồi<br>Tham vừa thôi! 😊</div>
+            `;
+            document.getElementById('lixiPopup').classList.add('show');
+        }
+
+        function closeLixiPopup() {
+            document.getElementById('lixiPopup').classList.remove('show');
+        }
+
+        function backToMain() {
+            showScreen('main');
+        }
+
+        function captureSlide() {
+            alert('Chức năng chụp ảnh sẽ được cập nhật sau!');
+        }
+
+        function createFallingFlowers() {
+            const container = document.getElementById('flowersContainer');
+            const flowers = ['🌸', '🌺', '🌼'];
+            
+            setInterval(() => {
+                const flower = document.createElement('div');
+                flower.className = 'flower';
+                flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+                flower.style.left = Math.random() * 100 + '%';
+                flower.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                container.appendChild(flower);
+                
+                setTimeout(() => flower.remove(), 8000);
+            }, 800);
+        }
+
+        // LANTERN ALBUM FUNCTIONS
+        function openLanternAlbum() {
+            showScreen('lanternAlbum');
+            
+            lanternsLit = false;
+            lanternState.isLocked = false;
+            document.getElementById('clickLanternHint').classList.remove('hidden');
+            document.getElementById('lanternContainer').classList.remove('locked');
+            createStars();
+        }
+
+        function createStars() {
+            const container = document.getElementById('lanternAlbum');
+            const existingStars = container.querySelectorAll('.star');
+            if (existingStars.length > 0) return;
+
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = (Math.random() * 3 + 1) + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(star);
+            }
+        }
+
+        function lightUpLanterns() {
+            if (lanternsLit) return;
+            
+            lanternsLit = true;
+            lanternState.isLocked = true;
+            document.getElementById('clickLanternHint').classList.add('hidden');
+            document.getElementById('lanternContainer').classList.add('locked');
+            
+            createLightBeams();
+            createParticles();
+            
+            setTimeout(() => {
+                createPhotoLanterns();
+            }, 1000);
+        }
+
+        function createLightBeams() {
+            const container = document.getElementById('lanternContainer');
+            const centralLantern = document.getElementById('centralLantern');
+            const rect = centralLantern.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 12; i++) {
+                const beam = document.createElement('div');
+                beam.className = 'light-beam';
+                beam.style.left = centerX + 'px';
+                beam.style.top = centerY + 'px';
+                beam.style.transform = `rotate(${i * 30}deg)`;
+                beam.style.animationDelay = (i * 0.05) + 's';
+                container.appendChild(beam);
+                
+                setTimeout(() => beam.remove(), 2000);
+            }
+        }
+
+        function createParticles() {
+            const container = document.getElementById('lanternContainer');
+            const centralLantern = document.getElementById('centralLantern');
+            const rect = centralLantern.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 100 + Math.random() * 200;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.animationDelay = (i * 0.02) + 's';
+                container.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 3000);
+            }
+        }
+
+        function createPhotoLanterns() {
+            const container = document.getElementById('lanternContainer');
+            const numLanterns = 24;
+            const radius = 400;
+            
+            for (let i = 0; i < numLanterns; i++) {
+                const albumIndex = visitedAlbums[i % visitedAlbums.length];
+                const angle = (i / numLanterns) * Math.PI * 2;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * (radius * 0.7);
+                const z = Math.sin(angle) * 200;
+                
+                const lantern = document.createElement('div');
+                lantern.className = 'photo-lantern';
+                lantern.setAttribute('data-album-index', albumIndex);
+                lantern.innerHTML = `
+                    <div class="photo-lantern-body" style="animation-delay: ${i * 0.1}s">
+                        <div class="photo-lantern-top"></div>
+                        <div class="photo-lantern-main">
+                            <img src="${albums[albumIndex].image}" alt="Photo">
+                        </div>
+                        <div class="photo-lantern-bottom"></div>
+                        <div class="photo-lantern-tassel"></div>
+                    </div>
+                `;
+                
+                lantern.style.transform = `translate3d(${x}px, ${y}px, ${z}px) rotateY(${-angle * 180 / Math.PI}deg)`;
+                
+                lantern.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    const idx = parseInt(this.getAttribute('data-album-index'));
+                    showPhotoPopup(idx);
+                });
+                
+                lantern.style.cursor = 'pointer';
+                
+                container.appendChild(lantern);
+                
+                setTimeout(() => {
+                    lantern.classList.add('show');
+                }, 1000 + i * 100);
+            }
+            
+            setTimeout(() => {
+                lanternState.isLocked = false;
+                document.getElementById('lanternContainer').classList.remove('locked');
+            }, 1000 + numLanterns * 100 + 500);
+        }
+
+        function showPhotoPopup(index) {
+            const album = albums[index];
+            const popup = document.getElementById('photoZoomPopup');
+            document.getElementById('photoZoomImg').src = album.image;
+            document.getElementById('photoZoomMessage').innerHTML = album.message;
+            popup.classList.add('show');
+        }
+
+        function closePhotoZoom() {
+            document.getElementById('photoZoomPopup').classList.remove('show');
+        }
+
+        function exitLanternAlbum() {
+            showScreen('main');
+            resetLanternState();
+        }
+
+        function resetLanternState() {
+            lanternState = {
+                rotationX: 0,
+                rotationY: 0,
+                isDragging: false,
+                lastX: 0,
+                lastY: 0,
+                isLocked: false
+            };
+            
+            const container = document.getElementById('lanternContainer');
+            const photoLanterns = container.querySelectorAll('.photo-lantern');
+            photoLanterns.forEach(lantern => lantern.remove());
+            container.style.transform = '';
+        }
+
+        // TROLL & FIREWORKS
+        function showTrollScreen() {
+            showScreen('trollScreen');
+            bgMusic.pause();
+            
+            setTimeout(() => {
+                startFireworksCountdown();
+            }, 3000);
+        }
+
+        function startFireworksCountdown() {
+            unlockAudio(); // MỞ KHÓA TRƯỚC KHI VÀO COUNTDOWN
+            showScreen('countdown');
+            
+            document.getElementById('countdownText').textContent = 'CÒN ĐÂY LÀ PHÁO HOA DÀNH CHO RIÊNG BẠN';
+            
+            let count = 3;
+            const countdownNum = document.getElementById('countdownNumber');
+            
+            function showCount() {
+                if (count > 0) {
+                    countdownNum.textContent = count;
+                    countdownNum.style.animation = 'none';
+                    setTimeout(() => {
+                        countdownNum.style.animation = 'countdownPop 1s ease-out';
+                    }, 10);
+                    count--;
+                    setTimeout(showCount, 1000);
+                } else {
+                    countdownNum.textContent = 'BẮT ĐẦU!';
+                    setTimeout(() => {
+                        showFireworksScreen();
+                    }, 1000);
+                }
+            }
+            
+            showCount();
+        }
+
+        function showFireworksScreen() {
+            unlockAudio();
+            showScreen('fireworksScreen');
+            
+            // DỪNG TẤT CẢ NHẠC TRƯỚC
+            stopAllMusic();
+            
+            // CHẠY NHẠC PHÁO HOA SAU 300MS
+            setTimeout(() => {
+                fireworksMusic.volume = 0.8;
+                fireworksMusic.loop = false;
+                const playPromise = fireworksMusic.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('Fireworks music playing');
+                    }).catch(error => {
+                        console.log('Fireworks music blocked:', error);
+                    });
+                }
+            }, 300);
+            
+            initFireworks();
+        }
+
+        function initFireworks() {
+            const canvas = document.getElementById('fireworksCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const fireworks = [];
+            const particles = [];
+            const stars = [];
+            let startTime = Date.now();
+            const FIREWORKS_DURATION = 30000;
+            
+            // TIMER CHO PHÁO HOA TO 5 GIÂY
+            let lastBigFireworkTime = Date.now();
+            const BIG_FIREWORK_INTERVAL = 5000;
+            
+            function createStars() {
+                for (let i = 0; i < 150; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        size: Math.random() * 2 + 0.5,
+                        alpha: Math.random(),
+                        twinkleSpeed: Math.random() * 0.05 + 0.01
+                    });
+                }
+            }
+            
+            class Firework {
+                constructor(x, y, targetX, targetY, albumIndex, isBig = false) {
+                    this.x = x;
+                    this.y = y;
+                    this.startX = x;
+                    this.startY = y;
+                    this.targetX = targetX;
+                    this.targetY = targetY;
+                    this.albumIndex = albumIndex;
+                    this.isBig = isBig;
+                    this.speed = isBig ? 5 : 3.5;
+                    this.angle = Math.atan2(targetY - y, targetX - x);
+                    this.vx = Math.cos(this.angle) * this.speed;
+                    this.vy = Math.sin(this.angle) * this.speed;
+                    this.hue = Math.random() * 360;
+                    this.trail = [];
+                }
+                
+                update(index) {
+                    this.trail.push({x: this.x, y: this.y});
+                    if (this.trail.length > 15) this.trail.shift();
+                    
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    
+                    const dx = this.targetX - this.x;
+                    const dy = this.targetY - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < this.speed * 2) {
+                        if (this.isBig) {
+                            createBigExplosion(this.targetX, this.targetY, this.hue, this.albumIndex);
+                        } else {
+                            createExplosion(this.targetX, this.targetY, this.hue, this.albumIndex);
+                        }
+                        fireworks.splice(index, 1);
+                    }
+                }
+                
+                draw() {
+                    ctx.beginPath();
+                    ctx.moveTo(this.trail[0]?.x || this.x, this.trail[0]?.y || this.y);
+                    this.trail.forEach(point => {
+                        ctx.lineTo(point.x, point.y);
+                    });
+                    ctx.strokeStyle = `hsla(${this.hue}, 100%, 60%, 0.8)`;
+                    ctx.lineWidth = this.isBig ? 6 : 3;
+                    ctx.stroke();
+                    
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.isBig ? 10 : 5, 0, Math.PI * 2);
+                    ctx.fillStyle = `hsl(${this.hue}, 100%, 70%)`;
+                    ctx.shadowBlur = this.isBig ? 30 : 15;
+                    ctx.shadowColor = `hsl(${this.hue}, 100%, 50%)`;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+            }
+            
+            class Particle {
+                constructor(x, y, hue, type, albumIndex) {
+                    this.x = x;
+                    this.y = y;
+                    this.hue = hue;
+                    this.type = type;
+                    this.albumIndex = albumIndex;
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const velocity = Math.random() * 6 + 2;
+                    this.vx = Math.cos(angle) * velocity;
+                    this.vy = Math.sin(angle) * velocity;
+                    
+                    this.alpha = 1;
+                    this.decay = Math.random() * 0.01 + 0.007;
+                    this.gravity = 0.07;
+                    this.friction = 0.97;
+                    
+                    this.size = Math.random() * 4 + 3;
+                    this.rotation = Math.random() * Math.PI * 2;
+                    this.rotationSpeed = (Math.random() - 0.5) * 0.15;
+                    
+                    if (this.type === 'image') {
+                        this.imageLifetime = 1.5;
+                        this.createdTime = Date.now();
+                        this.pauseTime = 0.8;
+                    }
+                }
+                
+                update(index) {
+                    if (this.type === 'image') {
+                        const elapsed = (Date.now() - this.createdTime) / 1000;
+                        
+                        if (elapsed < this.pauseTime) {
+                            this.rotation += this.rotationSpeed * 0.5;
+                            return;
+                        }
+                        
+                        if (elapsed > this.imageLifetime) {
+                            this.alpha -= 0.03;
+                        }
+                    } else {
+                        this.alpha -= this.decay;
+                    }
+                    
+                    this.vx *= this.friction;
+                    this.vy *= this.friction;
+                    this.vy += this.gravity;
+                    
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    
+                    this.rotation += this.rotationSpeed;
+                    
+                    if (this.alpha <= 0) {
+                        particles.splice(index, 1);
+                    }
+                }
+                
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.rotation);
+                    
+                    if (this.type === 'image') {
+                        const img = new Image();
+                        img.src = albums[this.albumIndex].image;
+                        const size = 60;
+                        ctx.shadowBlur = 20;
+                        ctx.shadowColor = `hsl(${this.hue}, 100%, 50%)`;
+                        ctx.drawImage(img, -size/2, -size/2, size, size);
+                    } else {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+                        ctx.fillStyle = `hsl(${this.hue}, 100%, 60%)`;
+                        ctx.shadowBlur = 12;
+                        ctx.shadowColor = `hsl(${this.hue}, 100%, 50%)`;
+                        ctx.fill();
+                    }
+                    
+                    ctx.restore();
+                }
+            }
+            
+            // ẢNH TO Ở GIỮA MÀN HÌNH - THU NHỎ
+            class BigImageParticle {
+                constructor(x, y, albumIndex) {
+                    this.x = x;
+                    this.y = y;
+                    this.albumIndex = albumIndex;
+                    this.alpha = 0;
+                    this.scale = 0;
+                    this.targetScale = 1;
+                    this.lifetime = 3;
+                    this.createdTime = Date.now();
+                    this.fadeInDuration = 0.5;
+                    this.fadeOutStart = 2.5;
+                }
+                
+                update(index) {
+                    const elapsed = (Date.now() - this.createdTime) / 1000;
+                    
+                    if (elapsed < this.fadeInDuration) {
+                        this.alpha = elapsed / this.fadeInDuration;
+                        this.scale = elapsed / this.fadeInDuration;
+                    } else if (elapsed > this.fadeOutStart) {
+                        const fadeProgress = (elapsed - this.fadeOutStart) / (this.lifetime - this.fadeOutStart);
+                        this.alpha = 1 - fadeProgress;
+                        this.scale = 1 - fadeProgress * 0.3;
+                    } else {
+                        this.alpha = 1;
+                        this.scale = 1;
+                    }
+                    
+                    if (elapsed > this.lifetime) {
+                        particles.splice(index, 1);
+                    }
+                }
+                
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.translate(this.x, this.y);
+                    ctx.scale(this.scale, this.scale);
+                    
+                    const img = new Image();
+                    img.src = albums[this.albumIndex].image;
+                    const size = 250; // THU NHỎ TỪ 400 XUỐNG 250
+                    
+                    ctx.shadowBlur = 30;
+                    ctx.shadowColor = 'rgba(255, 215, 0, 0.8)';
+                    
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                    ctx.fillRect(-size/2 - 15, -size/2 - 15, size + 30, size + 30);
+                    
+                    ctx.drawImage(img, -size/2, -size/2, size, size);
+                    
+                    ctx.restore();
+                }
+            }
+            
+            function createExplosion(x, y, hue, albumIndex) {
+                const particleCount = 60;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle(x, y, hue, 'dot', albumIndex));
+                }
+                
+                if (Math.random() < 0.5) {
+                    for (let i = 0; i < 2; i++) {
+                        particles.push(new Particle(x, y, hue, 'image', albumIndex));
+                    }
+                }
+            }
+            
+            // PHÁO HOA TO VÀ ẢNH TO Ở GIỮA
+            function createBigExplosion(x, y, hue, albumIndex) {
+                const particleCount = 150;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = new Particle(x, y, hue, 'dot', albumIndex);
+                    particle.size *= 1.5;
+                    const angle = (i / particleCount) * Math.PI * 2;
+                    const velocity = Math.random() * 10 + 5;
+                    particle.vx = Math.cos(angle) * velocity;
+                    particle.vy = Math.sin(angle) * velocity;
+                    particles.push(particle);
+                }
+                
+                // THÊM ẢNH TO Ở GIỮA MÀN HÌNH
+                const bigImg = new BigImageParticle(canvas.width / 2, canvas.height / 2, albumIndex);
+                particles.push(bigImg);
+            }
+            
+            function animate() {
+                if (Date.now() - startTime > FIREWORKS_DURATION) {
+                    fireworksMusic.pause();
+                    fireworksMusic.currentTime = 0;
+                    showFinalScreen();
+                    return;
+                }
+                
+                requestAnimationFrame(animate);
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = 'white';
+                stars.forEach(star => {
+                    star.alpha += star.twinkleSpeed;
+                    if (star.alpha > 1 || star.alpha < 0) star.twinkleSpeed *= -1;
+                    
+                    ctx.globalAlpha = Math.abs(star.alpha);
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1;
+                
+                fireworks.forEach((fw, index) => {
+                    fw.update(index);
+                    fw.draw();
+                });
+                
+                particles.forEach((p, index) => {
+                    p.update(index);
+                    p.draw();
+                });
+                
+                // PHÁO HOA TO MỖI 5 GIÂY
+                const now = Date.now();
+                if (now - lastBigFireworkTime >= BIG_FIREWORK_INTERVAL) {
+                    const startX = canvas.width / 2;
+                    const targetX = canvas.width / 2;
+                    const targetY = canvas.height * 0.3;
+                    const albumIndex = visitedAlbums[Math.floor(Math.random() * visitedAlbums.length)];
+                    fireworks.push(new Firework(startX, canvas.height, targetX, targetY, albumIndex, true));
+                    lastBigFireworkTime = now;
+                }
+                
+                // Pháo hoa nhỏ thường xuyên
+                if (Math.random() < 0.04) {
+                    const startX = canvas.width * (0.2 + Math.random() * 0.6);
+                    const targetX = canvas.width * (0.1 + Math.random() * 0.8);
+                    const targetY = canvas.height * (0.2 + Math.random() * 0.4);
+                    const albumIndex = visitedAlbums[Math.floor(Math.random() * visitedAlbums.length)];
+                    fireworks.push(new Firework(startX, canvas.height, targetX, targetY, albumIndex, false));
+                }
+            }
+            
+            createStars();
+            animate();
+        }
+
+        function showFinalScreen() {
+            unlockAudio();
+            showScreen('finalScreen');
+            
+            // DỪNG TẤT CẢ NHẠC TRƯỚC
+            stopAllMusic();
+            
+            // CHẠY NHẠC KẾT THÚC SAU 300MS
+            setTimeout(() => {
+                finalMusic.volume = 0.8;
+                finalMusic.loop = true;
+                const playPromise = finalMusic.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('Final music playing');
+                    }).catch(error => {
+                        console.log('Final music blocked:', error);
+                    });
+                }
+            }, 300);
+        }
+    </script>
+</body>
+</html>
